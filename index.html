@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jejak Perang: Detektif Sumber WW2 — Balai Arsip Sejarah Digital</title>
+
+  <!-- Google Fonts: Playfair Display (Serif) & Inter (Sans) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet">
+
+  <!-- Leaflet CSS for Interactive Historical Map -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+  <!-- LAYER TEKSTUR KERTAS ARSIP ANTIK -->
+  <div class="paper-texture-overlay" aria-hidden="true"></div>
+
+  <!-- LOADING SCREEN -->
+  <div id="loading-screen">
+    <div class="loading-logo">BALAI ARSIP SEJARAH</div>
+    <div class="diamond-divider" style="width: 120px;"><span></span></div>
+    <div class="loading-dots">
+      <div class="loading-dot"></div>
+      <div class="loading-dot"></div>
+      <div class="loading-dot"></div>
+    </div>
+    <p style="font-size: 0.75rem; color: var(--tan); letter-spacing: 0.15em; text-transform: uppercase;">
+      Membuka Dokumen Rahasia...
+    </p>
+  </div>
+
+  <!-- NAVIGASI UTAMA -->
+  <nav class="site-nav" id="main-nav">
+    <a href="#" class="nav-logo" data-page="page-menu">
+      <div class="logo-mark">JP</div>
+      <div>
+        <span>Jejak Perang</span>
+        <span style="display: block; font-size: 0.62rem; color: var(--brick); font-family: var(--font-sans); letter-spacing: 0.1em; text-transform: uppercase;">
+          Detektif Sumber WW2
+        </span>
+      </div>
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="#" data-page="page-menu">Menu</a></li>
+      <li><a href="#" data-page="page-jelajah">Jelajah</a></li>
+      <li><a href="#" data-page="page-detektif" style="color: var(--brick); font-weight: 700;">Detektif Sumber</a></li>
+      <li><a href="#" data-page="page-kuis">Kuis</a></li>
+      <li><a href="#" data-page="page-skor">Skor & Lencana</a></li>
+    </ul>
+
+    <div class="nav-controls">
+      <button class="btn-mute" id="btn-mute" title="Nyalakan/Matikan Suara">🔊</button>
+      <button class="mobile-menu-btn" id="mobile-menu-btn" title="Buka Menu">☰</button>
+    </div>
+  </nav>
+
+  <!-- MOBILE NAV DRAWER -->
+  <div class="mobile-nav" id="mobile-nav">
+    <div class="mobile-nav-backdrop"></div>
+    <div class="mobile-nav-drawer">
+      <div style="font-family: var(--font-serif); font-size: 1.1rem; color: var(--near-black); margin-bottom: 12px; border-bottom: 1px solid var(--border-tan); padding-bottom: 8px;">
+        Balai Arsip Perang
+      </div>
+      <a href="#" data-page="page-intro">Intro Arsip</a>
+      <a href="#" data-page="page-menu">Menu Utama</a>
+      <a href="#" data-page="page-jelajah">Mode Jelajah (Garis Waktu & Peta)</a>
+      <a href="#" data-page="page-detektif" style="color: var(--brick); font-weight: 700;">Mode Detektif Sumber</a>
+      <a href="#" data-page="page-kuis">Mode Kuis Evaluasi</a>
+      <a href="#" data-page="page-skor">Skor & Lencana Peneliti</a>
+    </div>
+  </div>
+
+  <!-- GLOBAL PROGRESS BAR -->
+  <div class="global-progress">
+    <div class="global-progress-bar" id="global-progress-bar"></div>
+  </div>
+
+  <!-- ====================================================================
+       1. HALAMAN INTRO / HERO (SCENE 1)
+       ==================================================================== -->
+  <section class="page active" id="page-intro">
+    <div class="hero-bg"></div>
+    <canvas id="hero-particles" class="hero-particles-canvas" aria-hidden="true"></canvas>
+    <div class="hero-content">
+      <div class="hero-stamp">DOKUMEN KEARSIPAN RESMI · IFB-303</div>
+      
+      <h1 class="hero-title">
+        <span class="title-accent">Penyelidikan Kritis Sejarah</span>
+        JEJAK PERANG
+        <span style="display: block; font-size: 0.45em; letter-spacing: 0.18em; font-family: var(--font-sans); color: var(--tan); text-transform: uppercase; margin-top: 6px;">
+          Detektif Sumber Perang Dunia II
+        </span>
+      </h1>
+
+      <div class="hero-divider"></div>
+
+      <!-- Typewriter Text Box -->
+      <div class="hero-typewriter">
+        "<span id="hero-typewriter-text"></span>"<span class="typewriter-cursor"></span>
+      </div>
+      <div class="hero-attribution">— Arsiparis Senior, Balai Arsip Perang Dunia</div>
+
+      <!-- Peringatan Konten Sensitif -->
+      <div class="hero-warning">
+        <div class="warn-icon">⚠️</div>
+        <div>
+          <strong>Peringatan Arsip Sejarah:</strong> Website ini memuat materi perang sesungguhnya, termasuk genosida Holocaust, foto arsip perang, kerja paksa Romusha, dan korban kemanusiaan untuk tujuan edukasi kritis dan literasi sumber sejarah.
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="hero-actions">
+        <button class="btn btn-primary btn-lg" id="btn-start-mission">
+          <span class="icon">🔍</span> Mulai Misi Detektif
+        </button>
+        <button class="btn btn-ghost" data-page="page-jelajah" style="color: var(--parchment); border-color: rgba(168,151,120,0.5);">
+          Jelajahi Garis Waktu
+        </button>
+      </div>
+
+      <div class="hero-scroll-hint">
+        <span>Klik Mulai untuk Membuka Arsip</span>
+        <span>↓</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================================
+       2. HALAMAN MENU UTAMA (SCENE 2)
+       ==================================================================== -->
+  <section class="page" id="page-menu">
+    <div class="menu-header">
+      <div class="section-label">Pusat Investigasi Peneliti</div>
+      <h2>Pilih Jalur Penelusuran</h2>
+      <div class="diamond-divider" style="max-width: 180px; margin: 12px auto;"><span></span></div>
+      <p>
+        Sebagai peneliti arsip baru, Anda bebas memilih cara belajar: pahami garis besar peristiwa di Mode Jelajah, selidiki dokumen kontradiktif di Mode Detektif, atau uji pemahaman Anda di Mode Kuis.
+      </p>
+    </div>
+
+    <!-- Tiga Kartu Pilihan Mode -->
+    <div class="menu-cards">
+      <!-- KARTU 1: JELAJAH -->
+      <div class="menu-card" data-page="page-jelajah">
+        <span class="card-icon">🗺️</span>
+        <span class="stamp stamp-tan">Eksplorasi Konteks</span>
+        <h3 style="margin-top: 8px;">Jelajah Peristiwa</h3>
+        <p>
+          Pelajari garis waktu 5 fase perang dari 1919 hingga 1945, dilengkapi peta interaktif lokasi peristiwa krusial di seluruh dunia.
+        </p>
+        <div class="card-progress">
+          <div class="card-progress-bar" id="menu-jelajah-bar"></div>
+        </div>
+        <div style="margin-top: 16px;">
+          <button class="btn btn-ghost btn-sm">Buka Garis Waktu & Peta ▶</button>
+        </div>
+      </div>
+
+      <!-- KARTU 2: DETEKTIF SUMBER (FEATURED) -->
+      <div class="menu-card featured" data-page="page-detektif" style="border: 2px solid var(--brick); background: #FFFDF9;">
+        <span class="card-badge">Inti Proyek · Literasi Kritis</span>
+        <span class="card-icon">🔍</span>
+        <h3>Detektif Sumber</h3>
+        <p>
+          Bandingkan laporan saksi mata, koran propaganda fasis, dan riset sejarawan modern. Uji kredibilitas setiap dokumen dan temukan alasan di balik perbedaannya!
+        </p>
+        <div class="card-progress">
+          <div class="card-progress-bar" id="menu-detektif-bar"></div>
+        </div>
+        <div style="margin-top: 16px;">
+          <button class="btn btn-primary btn-sm">Mulai Investigasi Dokumen ▶</button>
+        </div>
+      </div>
+
+      <!-- KARTU 3: KUIS -->
+      <div class="menu-card" data-page="page-kuis">
+        <span class="card-icon">✍️</span>
+        <span class="stamp stamp-tan">Uji Pemahaman</span>
+        <h3 style="margin-top: 8px;">Kuis Evaluasi</h3>
+        <p>
+          10 pertanyaan pilihan ganda interaktif berbasis dokumen arsip untuk menguji keterampilan membedakan sumber primer dan sekunder.
+        </p>
+        <div class="card-progress">
+          <div class="card-progress-bar" id="menu-kuis-bar"></div>
+        </div>
+        <div style="margin-top: 16px;">
+          <button class="btn btn-ghost btn-sm">Uji Pengetahuan ▶</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Overall Progress Box -->
+    <div class="overall-progress">
+      <h4>STATUS INVESTIGASI ANDA</h4>
+      <div class="progress-stats">
+        <div class="stat-item">
+          <span class="stat-value" id="stat-cases-count">0 / 5</span>
+          <span class="stat-label">Kasus Detektif</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value" id="stat-quiz-score">0 Pts</span>
+          <span class="stat-label">Skor Kuis</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value" id="stat-global-percent">0%</span>
+          <span class="stat-label">Total Selesai</span>
+        </div>
+      </div>
+      <p class="text-muted" style="font-size: 0.8rem;">
+        Selesaikan semua 5 kasus dan kuis untuk meraih lencana kehormatan <strong>"Arsiparis Utama WW2"</strong>!
+      </p>
+    </div>
+  </section>
+
+  <!-- ====================================================================
+       3. HALAMAN JELAJAH: GARIS WAKTU & PETA (SCENE 3 & 4)
+       ==================================================================== -->
+  <section class="page" id="page-jelajah">
+    <div class="jelajah-header">
+      <div class="section-label">Eksplorasi Sejarah Interaktif</div>
+      <h2>Garis Waktu & Peta Teater Perang</h2>
+      <p>"Memahami masa lalu membutuhkan pengetahuan tentang kapan dan di mana peristiwa itu berlangsung."</p>
+    </div>
+
+    <!-- 5 Phase Navigation Tabs -->
+    <div class="phase-tabs" id="phase-tabs"></div>
+
+    <!-- Timeline Content Section -->
+    <div class="timeline-section">
+      <div class="phase-info" id="phase-info"></div>
+      <div class="timeline-list" id="timeline-list"></div>
+    </div>
+
+    <!-- Interactive Map Section -->
+    <div class="map-section">
+      <div style="max-width: 1000px; margin: 0 auto;">
+        <div class="section-label" style="color: var(--brick-light);">Peta Dunia Kearsipan</div>
+        <h3>Sebaran Titik Peristiwa Bersejarah</h3>
+        <p>Klik titik penanda merah pada peta untuk melihat koordinat peristiwa dan melompat ke lokasi bersejarah.</p>
+
+        <!-- Filter Map by Phase -->
+        <div class="map-filter" id="map-filter-container"></div>
+
+        <!-- Leaflet Map Container -->
+        <div class="map-container">
+          <div id="map"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================================
+       4. HALAMAN DETEKTIF SUMBER (SCENE 5 & 6) — INTI PROYEK
+       ==================================================================== -->
+  <section class="page" id="page-detektif">
+    <div class="detektif-header">
+      <div class="section-label">Laboratorium Literasi Kritis</div>
+      <h2>Meja Kerja Detektif Sumber</h2>
+      <p>"Jangan percaya begitu saja pada tulisan di atas kertas. Periksa siapa penulisnya, kapan ditulis, dan untuk siapa."</p>
+    </div>
+
+    <!-- Case Selector Buttons (5 Kasus) -->
+    <div class="case-selector" id="case-selector"></div>
+
+    <!-- Case Content Body -->
+    <div class="case-content">
+      <!-- Brief Kasus -->
+      <div class="case-brief" id="case-brief"></div>
+
+      <!-- Sources Flip Cards Grid -->
+      <div class="sources-grid" id="sources-grid"></div>
+
+      <!-- Rating Sliders Section -->
+      <div class="rating-section" id="rating-section"></div>
+
+      <!-- Historian Neutral Verdict Panel (Muncul setelah submit) -->
+      <div class="verdict-panel" id="verdict-panel"></div>
+    </div>
+  </section>
+
+  <!-- ====================================================================
+       5. HALAMAN KUIS EVALUASI (SCENE 7)
+       ==================================================================== -->
+  <section class="page" id="page-kuis">
+    <div class="kuis-header">
+      <div class="section-label">Uji Literasi Sejarah</div>
+      <h2>Kuis Evaluasi Peneliti</h2>
+      <p>Buktikan pemahaman Anda terhadap konteks peristiwa dan kemampuan membedakan sumber sejarah.</p>
+    </div>
+
+    <!-- Kuis Progress Bar -->
+    <div class="kuis-progress-bar">
+      <div class="kuis-progress-fill" id="quiz-progress-fill" style="width: 0%;"></div>
+    </div>
+
+    <!-- Kuis Container -->
+    <div class="kuis-container">
+      <div class="question-counter" id="quiz-counter">SOAL 1 DARI 10</div>
+      
+      <div class="question-card">
+        <div class="question-text" id="quiz-text">Memuat pertanyaan...</div>
+        
+        <!-- Archive Image Placeholder / Info Tag -->
+        <div class="question-image">
+          <div id="quiz-image-title">📷 Dokumen Arsip Terkait</div>
+        </div>
+
+        <!-- Answers Grid -->
+        <div class="answers-grid" id="quiz-answers"></div>
+
+        <!-- Explanatory Feedback Banner -->
+        <div class="feedback-banner" id="quiz-feedback"></div>
+      </div>
+
+      <div class="kuis-nav">
+        <button class="btn btn-ghost" data-page="page-menu">Kembali ke Menu</button>
+        <button class="btn btn-primary" id="btn-next-question" style="display: none;">
+          Pertanyaan Selanjutnya ▶
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================================
+       6. HALAMAN SKOR & LENCANA (SCENE 8)
+       ==================================================================== -->
+  <section class="page" id="page-skor">
+    <div class="skor-container">
+      <!-- Animated Badge Ring -->
+      <div class="badge-display">
+        <div class="badge-ring" id="badge-ring">
+          <span style="font-size: 2.8rem;">📜</span>
+          <span class="badge-label" id="badge-label">Peneliti Arsip Pratama</span>
+        </div>
+      </div>
+
+      <h2 class="skor-title">Misi Investigasi Selesai!</h2>
+      <p class="skor-subtitle">
+        "Sejarah bukan hanya tentang apa yang terjadi, melainkan dari mana dan bagaimana kita mengetahui hal itu."
+      </p>
+
+      <!-- Score Breakdown Table -->
+      <div class="skor-breakdown">
+        <h4>RINCIAN PENCAPAIAN RISET ANDA</h4>
+        
+        <div class="score-row">
+          <span class="label">Kasus Detektif Sumber yang Dituntaskan:</span>
+          <span class="value" id="score-cases-val">0 / 5 Kasus</span>
+        </div>
+        
+        <div class="score-row">
+          <span class="label">Skor Uji Literasi Kuis:</span>
+          <span class="value" id="score-quiz-val">0 Poin</span>
+        </div>
+        
+        <div class="total-score-display">
+          <div class="big-score" id="final-total-score">0</div>
+          <div class="score-out-of">Indeks Kemahiran Literasi Sejarah (% Maksimal 100)</div>
+        </div>
+      </div>
+
+      <!-- Recommendation Box -->
+      <div class="recommendation-box">
+        <h5>💡 Catatan & Evaluasi Pembelajaran:</h5>
+        <p id="score-recommendation-text">
+          Lanjutkan penyelidikan pada kasus-kasus yang belum Anda selesaikan untuk melatih intuisi Anda dalam mendeteksi bias dan propaganda sejarah!
+        </p>
+      </div>
+
+      <!-- Actions -->
+      <div class="skor-actions">
+        <button class="btn btn-primary" data-page="page-detektif">
+          🔍 Lanjut Periksa Kasus Arsip
+        </button>
+        <button class="btn btn-ghost" data-page="page-menu">
+          🏠 Kembali ke Menu Utama
+        </button>
+        <button class="btn btn-ghost" id="btn-restart-mission" style="color: var(--brick); border-color: rgba(138,42,31,0.3);">
+          🔄 Ulangi Misi dari Awal
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================================
+       SCRIPTS
+       ==================================================================== -->
+  <!-- Leaflet JS for Maps -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  
+  <!-- Basis Data Sejarah -->
+  <script src="assets/js/data.js"></script>
+
+  <!-- Mesin Audio Prosedural (Web Audio API) -->
+  <script src="assets/js/audio.js"></script>
+
+  <!-- Logika Aplikasi Utama -->
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
+
