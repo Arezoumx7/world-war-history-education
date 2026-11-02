@@ -114,3 +114,4 @@ Website ini dibuat berbasis *static web* sehingga 100% siap di-hosting langsung 
 - **Mata Kuliah:** IFB-303 Teknik Multimedia
 - **Institusi:** Institut Teknologi Nasional (ITENAS) Bandung
 - **Tahun:** 2026
+
