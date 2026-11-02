@@ -86,32 +86,4 @@ Projek_Tekmul_Akhit/
 
 ---
 
-## 🚀 Cara Menjalankan Secara Lokal
-
-1. **Clone repositori ini:**
-   ```bash
-   git clone https://github.com/USERNAME/NAMA-REPO.git
-   cd NAMA-REPO
-   ```
-2. **Jalankan langsung:**
-   - Cukup klik dua kali berkas `index.html` untuk membuka di browser apa saja (Google Chrome, Microsoft Edge, Firefox, Safari).
-   - Atau gunakan ekstensi **Live Server** di VS Code.
-
----
-
-## 🌐 Publikasi Gratis via GitHub Pages
-
-Website ini dibuat berbasis *static web* sehingga 100% siap di-hosting langsung secara gratis melalui **GitHub Pages**:
-1. Buka repositori Anda di GitHub.
-2. Masuk ke menu **Settings** > **Pages** (di bilah kiri).
-3. Pada bagian **Build and deployment** > **Source**, pilih branch `main` dan folder `/(root)`.
-4. Klik **Save**. Dalam 1-2 menit, situs Anda akan aktif di URL:
-   `https://USERNAME.github.io/NAMA-REPO/`
-
----
-
-## 👥 Pengembang
-- **Mata Kuliah:** IFB-303 Teknik Multimedia
-- **Institusi:** Institut Teknologi Nasional (ITENAS) Bandung
-- **Tahun:** 2026
 
